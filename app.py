@@ -27,10 +27,22 @@ def error_handler(message, error_code):
         }
     }), error_code
 
+
+# success handler function
+
+def success_hander(equation, ans, success_code):
+    return jsonify({
+        "Calculation": {
+            "Message": "Successful result",
+            "Success": True,
+            "Text": equation,
+            "Result": ans
+        }}), success_code
+
 # returns the sum of path parameters x and y
 
 
-@app.route('/calc/<request_type>/add/<x>/to/<y>', methods=['GET'])
+@ app.route('/calc/<request_type>/add/<x>/to/<y>', methods=['GET'])
 def add(x, y, request_type):
     ans = decimal_or_integer(Decimal(x) + Decimal(y))
     equation = f'{str(x)} + {str(y)} = {str(ans)}'
@@ -39,19 +51,12 @@ def add(x, y, request_type):
         return make_response(equation, 200)
 
     if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        return success_hander(ans, equation, 200)
 
 # returns the difference of path parameters x and y
 
 
-@app.route('/calc/<request_type>/subtract/<x>/from/<y>', methods=['GET', 'POST'])
+@ app.route('/calc/<request_type>/subtract/<x>/from/<y>', methods=['GET', 'POST'])
 def subtract(x, y, request_type):
     ans = decimal_or_integer(Decimal(y) - Decimal(x))
     equation = f'{(y)} - {(x)} = {(ans)}'
@@ -60,20 +65,13 @@ def subtract(x, y, request_type):
         return make_response(equation, 200)
 
     if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        return success_hander(equation, ans, 200)
 
 
 # returns the product of path parameters x and y
 
 
-@app.route('/calc/<request_type>/multiply/<x>/by/<y>', methods=['GET', 'POST'])
+@ app.route('/calc/<request_type>/multiply/<x>/by/<y>', methods=['GET', 'POST'])
 def multiply(x, y, request_type):
     ans = decimal_or_integer(Decimal(x) * Decimal(y))
     equation = f'{str(x)} * {str(y)} = {str(ans)}'
@@ -82,17 +80,10 @@ def multiply(x, y, request_type):
         return make_response(equation, 200)
 
     if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        return success_hander(equation, ans, 200)
 
 
-@app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
+@ app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
 def divide(x, y, request_type):
     try:
         ans = decimal_or_integer(Decimal(x) / Decimal(y))
@@ -102,21 +93,14 @@ def divide(x, y, request_type):
             return make_response(equation, 200)
 
         if request.method == 'GET' and request_type == 'api':
-            response = jsonify({
-                "Calculation": {
-                    "Message": "Successful result",
-                    "Success": True,
-                    "Text": equation,
-                    "Result": ans
-                }})
-        return make_response(response, 200)
+            return success_hander(equation, ans, 200)
 
     except ZeroDivisionError:
         # return Cannot divide by zero error
         return make_response("Cannot divide by zero", 400)
 
 
-@app.route('/calc/<request_type>/sum', methods=['GET'])
+@ app.route('/calc/<request_type>/sum', methods=['GET'])
 def calculate_sum(request_type):
     content_type = request.headers.get('Content-Type')
     if not content_type == 'application/json':
@@ -131,14 +115,7 @@ def calculate_sum(request_type):
             return make_response(response, 200)
 
         if request.method == 'GET' and request_type == 'api':
-            response = jsonify({
-                "Calculation": {
-                    "Message": "Successful result",
-                    "Success": True,
-                    "Text": equation,
-                    "Result": ans
-                }})
-            return make_response(response, 200)
+            return success_hander(ans, equation, 200)
 
     elif content_type == 'application/json':
         if not request.is_json:
@@ -156,18 +133,13 @@ def calculate_sum(request_type):
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
         equation = ' + '.join(convstr) + ' = '
 
-        return make_response(jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }}), 200)
+        return success_hander(equation, ans, 200)
+
     else:
         return error_handler('Invalid Method', 400)
 
 
-@app.route('/calc/<request_type>/product', methods=['GET'])
+@ app.route('/calc/<request_type>/product', methods=['GET'])
 def calculate_product(request_type):
     content_type = request.headers.get('Content-Type')
     if not content_type == 'application/json':
@@ -181,14 +153,7 @@ def calculate_product(request_type):
             return make_response(response, 200)
 
         if request.method == 'GET' and request_type == 'api':
-            response = jsonify({
-                "Calculation": {
-                    "Message": "Successful result",
-                    "Success": True,
-                    "Text": equation,
-                    "Result": ans
-                }})
-            return make_response(response, 200)
+            success_hander(equation, ans, 200)
 
     elif content_type == 'application/json':
         if not request.is_json:
@@ -206,14 +171,7 @@ def calculate_product(request_type):
         convstr = [str(i) for i in numbers]
         equation = ' x '.join(convstr) + ' = '
 
-        return make_response(jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }
-        }), 200)
+        return success_hander(equation, ans, 200)
     else:
         return error_handler('Invalid Method', 400)
 
@@ -259,15 +217,7 @@ def calculate_average(request_type):
         equation = '(' + ' + '.join(convstr) + ') / ' + \
             str(len(convstr)) + ' = '
 
-        response = {
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }
-        }
-        return make_response(jsonify(response), 200)
+        return success_hander(equation, ans, 200)
 
     else:
         return error_handler('Invalid Method', 400)
