@@ -164,12 +164,7 @@ def calculate_sum(request_type):
                 "Result": ans
             }}), 200)
     else:
-        return jsonify({
-            "Calculation": {
-                "Message": "Invalid method",
-                "Success": False,
-            }
-        }), 400
+        return error_handler('Invalid Method', 400)
 
 
 @app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
@@ -195,29 +190,14 @@ def calculate_product(request_type):
 
     elif request.method == 'POST' and request_type == 'api':
         if not request.is_json:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Missing JSON in request",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Missing JSON in request', 400)
 
         if 'Numbers' not in request.json:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Missing numbers in request",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Missing Numbers in request', 400)
 
         numbers = request.json['Numbers']
         if len(numbers) == 0:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Empty List",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Empty List', 400)
 
         print(numbers)
         ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
@@ -235,12 +215,7 @@ def calculate_product(request_type):
         return make_response(jsonify(response), 200)
 
     else:
-        return jsonify({
-            "Calculation": {
-                "Message": "Invalid method",
-                "Success": False,
-            }
-        }), 400
+        return error_handler('Invalid Method', 400)
 
 
 @app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
@@ -267,29 +242,14 @@ def calculate_average(request_type):
 
     elif request.method == 'POST' and request_type == 'api':
         if not request.is_json:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Missing JSON in request",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Missing JSON in request', 400)
 
         if 'Numbers' not in request.json:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Missing numbers in request",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Missing Numbers in request', 400)
 
         numbers = request.json['Numbers']
         if len(numbers) == 0:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Empty List",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Empty List', 400)
 
         ans = decimal_or_integer(
             statistics.mean(map(Decimal, numbers)))
@@ -308,9 +268,4 @@ def calculate_average(request_type):
         return make_response(jsonify(response), 200)
 
     else:
-        return jsonify({
-            "Calculation": {
-                "Message": "Invalid method",
-                "Success": False,
-            }
-        }), 400
+        return error_handler('Invalid Method', 400)
