@@ -86,7 +86,6 @@ def calculate_sum():
             }), 400
 
         numbers = request.json['Numbers']
-        print(numbers)
         if len(numbers) == 0:
             return jsonify({
                 "Calculation": {
@@ -95,11 +94,18 @@ def calculate_sum():
                 }
             }), 400
 
+        print(numbers)
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
-        equation = ' + '.join(convstr) + ' = ' + str(ans)
+        equation = ' + '.join(convstr) + ' = '
 
-        return make_response(equation, 200)
+        return make_response(jsonify({
+            "Calculation": {
+                "Message": "Successful result",
+                "Success": True,
+                "Text": equation,
+                "Result": ans
+            }}), 200)
     else:
         return jsonify({
             "Calculation": {
@@ -138,7 +144,6 @@ def calculate_product():
             }), 400
 
         numbers = request.json['Numbers']
-        print(numbers)
         if len(numbers) == 0:
             return jsonify({
                 "Calculation": {
@@ -147,10 +152,20 @@ def calculate_product():
                 }
             }), 400
 
+        print(numbers)
         ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
-        equation = ' x '.join(convstr) + ' = ' + str(ans)
-        return make_response(equation, 200)
+        equation = ' x '.join(convstr) + ' = '
+
+        response = {
+            "Calculation": {
+                "Message": "Successful result",
+                "Success": True,
+                "Text": equation,
+                "Result": ans
+            }
+        }
+        return make_response(jsonify(response), 200)
 
     else:
         return jsonify({
@@ -191,7 +206,6 @@ def calculate_average():
             }), 400
 
         numbers = request.json['Numbers']
-        print(numbers)
         if len(numbers) == 0:
             return jsonify({
                 "Calculation": {
@@ -204,8 +218,17 @@ def calculate_average():
             statistics.mean(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
         equation = '(' + ' + '.join(convstr) + ') / ' + \
-            str(len(convstr)) + ' = ' + str(ans)
-        return make_response(equation, 200)
+            str(len(convstr)) + ' = '
+
+        response = {
+            "Calculation": {
+                "Message": "Successful result",
+                "Success": True,
+                "Text": equation,
+                "Result": ans
+            }
+        }
+        return make_response(jsonify(response), 200)
 
     else:
         return jsonify({
