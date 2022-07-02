@@ -46,3 +46,37 @@ def divide(x, y):
     except ZeroDivisionError:
         # return Cannot divide by zero error
         return make_response("Cannot divide by zero", 400)
+
+
+@app.route('/calc/web/sum', methods=['GET'])
+def calculate_sum():
+    try:
+        ans = sum(map(Decimal, request.args.getlist('numbers')))
+        equation = '+'.join(request.args.getlist('numbers')
+                            ) + ' = ' + str(ans)
+        return make_response(equation, 200)
+    except ValueError:
+        # Make a response to Invalid input such as a string instead of an integer is present in the query parameter
+        return make_response("Invalid input", 400)
+
+
+@ app.route('/calc/web/product', methods=['GET'])
+def calculate_product():
+    try:
+        ans = math.prod(map(Decimal, request.args.getlist('numbers')))
+        equation = ' x ' .join(request.args.getlist(
+            'numbers')) + ' = ' + str(ans)
+        return make_response(equation, 200)
+    except ValueError:
+        return make_response("Invalid input", 400)
+
+
+@ app.route('/calc/web/mean', methods=['GET'])
+def calculate_mean():
+    try:
+        ans = statistics.mean(map(Decimal, request.args.getlist('numbers')))
+        equation = '(' + ' + '.join(request.args.getlist(
+            'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = ' + str(ans)
+        return make_response(equation, 200)
+    except ValueError:
+        return make_response("Invalid input", 400)
