@@ -167,28 +167,30 @@ def calculate_sum(request_type):
         return error_handler('Invalid Method', 400)
 
 
-@app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/product', methods=['GET'])
 def calculate_product(request_type):
-    ans = decimal_or_integer(
-        math.prod(map(Decimal, request.args.getlist('numbers'))))
-    equation = ' x ' .join(request.args.getlist(
-        'numbers')) + ' = '
+    content_type = request.headers.get('Content-Type')
+    if not content_type == 'application/json':
+        ans = decimal_or_integer(
+            math.prod(map(Decimal, request.args.getlist('numbers'))))
+        equation = ' x ' .join(request.args.getlist(
+            'numbers')) + ' = '
 
-    if request.method == 'GET' and request_type == 'web':
-        response = equation
-        return make_response(response, 200)
+        if request.method == 'GET' and request_type == 'web':
+            response = equation
+            return make_response(response, 200)
 
-    if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        if request.method == 'GET' and request_type == 'api':
+            response = jsonify({
+                "Calculation": {
+                    "Message": "Successful result",
+                    "Success": True,
+                    "Text": equation,
+                    "Result": ans
+                }})
+            return make_response(response, 200)
 
-    elif request.method == 'POST' and request_type == 'api':
+    elif content_type == 'application/json':
         if not request.is_json:
             return error_handler('Missing JSON in request', 400)
 
@@ -204,43 +206,43 @@ def calculate_product(request_type):
         convstr = [str(i) for i in numbers]
         equation = ' x '.join(convstr) + ' = '
 
-        response = {
+        return make_response(jsonify({
             "Calculation": {
                 "Message": "Successful result",
                 "Success": True,
                 "Text": equation,
                 "Result": ans
             }
-        }
-        return make_response(jsonify(response), 200)
-
+        }), 200)
     else:
         return error_handler('Invalid Method', 400)
 
 
-@app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
+@ app.route('/calc/<request_type>/mean', methods=['GET'])
 def calculate_average(request_type):
-    ans = decimal_or_integer(
-        statistics.mean(map(Decimal, request.args.getlist('numbers'))))
+    content_type = request.headers.get('Content-Type')
+    if not content_type == 'application/json':
+        ans = decimal_or_integer(
+            statistics.mean(map(Decimal, request.args.getlist('numbers'))))
 
-    equation = '(' + ' + ' .join(request.args.getlist(
-        'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = '
+        equation = '(' + ' + ' .join(request.args.getlist(
+            'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = '
 
-    if request.method == 'GET' and request_type == 'web':
-        response = equation
-        return make_response(response, 200)
+        if request.method == 'GET' and request_type == 'web':
+            response = equation
+            return make_response(response, 200)
 
-    if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        if request.method == 'GET' and request_type == 'api':
+            response = jsonify({
+                "Calculation": {
+                    "Message": "Successful result",
+                    "Success": True,
+                    "Text": equation,
+                    "Result": ans
+                }})
+            return make_response(response, 200)
 
-    elif request.method == 'POST' and request_type == 'api':
+    elif content_type == 'application/json':
         if not request.is_json:
             return error_handler('Missing JSON in request', 400)
 
