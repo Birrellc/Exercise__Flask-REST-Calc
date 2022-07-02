@@ -69,8 +69,32 @@ def calculate_sum():
         return make_response(response, 200)
 
     elif request.method == 'POST':
+        if not request.is_json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing JSON in request",
+                    "Success": False,
+                }
+            }), 400
+
+        if 'Numbers' not in request.json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing numbers in request",
+                    "Success": False,
+                }
+            }), 400
+
         numbers = request.json['Numbers']
         print(numbers)
+        if len(numbers) == 0:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Empty List",
+                    "Success": False,
+                }
+            }), 400
+
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
         equation = ' + '.join(convstr) + ' = ' + str(ans)
@@ -97,8 +121,32 @@ def calculate_product():
         return make_response(response, 200)
 
     elif request.method == 'POST':
+        if not request.is_json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing JSON in request",
+                    "Success": False,
+                }
+            }), 400
+
+        if 'Numbers' not in request.json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing numbers in request",
+                    "Success": False,
+                }
+            }), 400
+
         numbers = request.json['Numbers']
         print(numbers)
+        if len(numbers) == 0:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Empty List",
+                    "Success": False,
+                }
+            }), 400
+
         ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
         equation = ' x '.join(convstr) + ' = ' + str(ans)
@@ -126,7 +174,32 @@ def calculate_average():
         return make_response(response, 200)
 
     elif request.method == 'POST':
+        if not request.is_json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing JSON in request",
+                    "Success": False,
+                }
+            }), 400
+
+        if 'Numbers' not in request.json:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Missing numbers in request",
+                    "Success": False,
+                }
+            }), 400
+
         numbers = request.json['Numbers']
+        print(numbers)
+        if len(numbers) == 0:
+            return jsonify({
+                "Calculation": {
+                    "Message": "Empty List",
+                    "Success": False,
+                }
+            }), 400
+
         ans = decimal_or_integer(
             statistics.mean(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
