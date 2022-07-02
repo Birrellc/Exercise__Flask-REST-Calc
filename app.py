@@ -31,4 +31,8 @@ def multiply(x, y):
 
 @app.route('/calc/web/divide/<x>/by/<y>', methods=['GET'])
 def divide(x, y):
-    return make_response(str(Decimal(x) / Decimal(y)), 200)
+    try:
+        return make_response(str(int(x) / int(y)), 200)
+    except ZeroDivisionError:
+        # return Cannot divide by zero error
+        return make_response("Cannot divide by zero", 400)
