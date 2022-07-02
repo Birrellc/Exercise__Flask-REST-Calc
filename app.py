@@ -39,9 +39,9 @@ def multiply(x, y):
 
 @app.route('/calc/web/divide/<x>/by/<y>', methods=['GET'])
 def divide(x, y):
-    ans = (Decimal(x) / Decimal(y))
-    equation = f'{str(x)} / {str(y)} = {str(ans)}'
     try:
+        ans = (Decimal(x) / Decimal(y))
+        equation = f'{str(x)} / {str(y)} = {str(ans)}'
         return make_response(equation, 200)
     except ZeroDivisionError:
         # return Cannot divide by zero error
