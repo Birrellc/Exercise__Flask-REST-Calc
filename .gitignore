@@ -1,2 +1,6 @@
 venv
-__pycache__
+.gitignore
+core.Microsoft*
+env.py
+__pycache__/
+*.py[cod]
