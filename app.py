@@ -9,11 +9,23 @@ app = Flask(__name__)
 
 # helper function to change decimal to full value numbers eg: 3.0 to 3
 
+
 def decimal_or_integer(x):
     value = math.ceil(x) - math.floor(x)
     if value == 0:
         return math.floor(x)
     return x
+
+# error handler function
+
+
+def error_handler(message, error_code):
+    return jsonify({
+        "Error": {
+            "Message": message,
+            "Success": False,
+        }
+    }), error_code
 
 # returns the sum of path parameters x and y
 
@@ -80,7 +92,7 @@ def multiply(x, y, request_type):
         return make_response(response, 200)
 
 
-@ app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
 def divide(x, y, request_type):
     try:
         ans = decimal_or_integer(Decimal(x) / Decimal(y))
@@ -104,56 +116,44 @@ def divide(x, y, request_type):
         return make_response("Cannot divide by zero", 400)
 
 
-@ app.route('/calc/<request_type>/sum', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/sum', methods=['GET'])
 def calculate_sum(request_type):
-    ans = decimal_or_integer(
-        sum(map(Decimal, request.args.getlist('numbers'))))
-    equation = ' + ' .join(request.args.getlist('numbers')
-                           ) + ' = '
+    content_type = request.headers.get('Content-Type')
+    if not content_type == 'application/json':
 
-    if request.method == 'GET' and request_type == 'web':
-        response = equation
-        return make_response(response, 200)
+        ans = decimal_or_integer(
+            sum(map(Decimal, request.args.getlist('numbers'))))
+        equation = ' + ' .join(request.args.getlist('numbers')
+                               ) + ' = ' + str(ans)
 
-    if request.method == 'GET' and request_type == 'api':
-        response = jsonify({
-            "Calculation": {
-                "Message": "Successful result",
-                "Success": True,
-                "Text": equation,
-                "Result": ans
-            }})
-        return make_response(response, 200)
+        if request.method == 'GET' and request_type == 'web':
+            response = equation
+            return make_response(response, 200)
 
-    elif request.method == 'POST' and request_type == 'api':
-        if not request.is_json:
-            return jsonify({
+        if request.method == 'GET' and request_type == 'api':
+            response = jsonify({
                 "Calculation": {
-                    "Message": "Missing JSON in request",
-                    "Success": False,
-                }
-            }), 400
+                    "Message": "Successful result",
+                    "Success": True,
+                    "Text": equation,
+                    "Result": ans
+                }})
+            return make_response(response, 200)
+
+    elif content_type == 'application/json':
+        if not request.is_json:
+            return error_handler('Missing JSON in request', 400)
 
         if 'Numbers' not in request.json:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Missing numbers in request",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Missing Numbers in request', 400)
 
         numbers = request.json['Numbers']
         if len(numbers) == 0:
-            return jsonify({
-                "Calculation": {
-                    "Message": "Empty List",
-                    "Success": False,
-                }
-            }), 400
+            return error_handler('Empty List', 400)
 
         print(numbers)
-        ans = decimal_or_integer(sum(map(Decimal, numbers)))
         convstr = [str(i) for i in numbers]
+        ans = decimal_or_integer(sum(map(Decimal, numbers)))
         equation = ' + '.join(convstr) + ' = '
 
         return make_response(jsonify({
@@ -172,7 +172,7 @@ def calculate_sum(request_type):
         }), 400
 
 
-@ app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
 def calculate_product(request_type):
     ans = decimal_or_integer(
         math.prod(map(Decimal, request.args.getlist('numbers'))))
@@ -243,7 +243,7 @@ def calculate_product(request_type):
         }), 400
 
 
-@ app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
 def calculate_average(request_type):
     ans = decimal_or_integer(
         statistics.mean(map(Decimal, request.args.getlist('numbers'))))
