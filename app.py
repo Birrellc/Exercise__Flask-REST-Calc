@@ -1,5 +1,5 @@
 # Import required modules
-from flask import Flask, make_response, request
+from flask import Flask, make_response, request, jsonify
 from decimal import Decimal
 import math
 import statistics
@@ -57,38 +57,87 @@ def divide(x, y):
         return make_response("Cannot divide by zero", 400)
 
 
-@app.route('/calc/web/sum', methods=['GET'])
+@app.route('/calc/web/sum', methods=['GET', 'POST'])
 def calculate_sum():
-    try:
-        ans = decimal_or_integer(
-            sum(map(Decimal, request.args.getlist('numbers'))))
-        equation = '+'.join(request.args.getlist('numbers')
-                            ) + ' = ' + str(ans)
+    ans = decimal_or_integer(
+        sum(map(Decimal, request.args.getlist('numbers'))))
+    equation = '+'.join(request.args.getlist('numbers')
+                        ) + ' = ' + str(ans)
+
+    if request.method == 'GET':
+        response = equation
+        return make_response(response, 200)
+
+    elif request.method == 'POST':
+        numbers = request.json['Numbers']
+        print(numbers)
+        ans = decimal_or_integer(sum(map(Decimal, numbers)))
+        convstr = [str(i) for i in numbers]
+        equation = ' + '.join(convstr) + ' = ' + str(ans)
+
         return make_response(equation, 200)
-    except ValueError:
-        # Make a response to Invalid input such as a string instead of an integer is present in the query parameter
-        return make_response("Invalid input", 400)
+    else:
+        return jsonify({
+            "Calculation": {
+                "Message": "Invalid method",
+                "Success": False,
+            }
+        }), 400
 
 
-@ app.route('/calc/web/product', methods=['GET'])
+@app.route('/calc/web/product', methods=['GET', 'POST'])
 def calculate_product():
-    try:
+    ans = decimal_or_integer(
+        math.prod(map(Decimal, request.args.getlist('numbers'))))
+    equation = 'x'.join(request.args.getlist(
+        'numbers')) + ' = ' + str(ans)
+
+    if request.method == 'GET':
+        response = equation
+        return make_response(response, 200)
+
+    elif request.method == 'POST':
+        numbers = request.json['Numbers']
+        print(numbers)
+        ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
+        convstr = [str(i) for i in numbers]
+        equation = ' x '.join(convstr) + ' = ' + str(ans)
+        return make_response(equation, 200)
+
+    else:
+        return jsonify({
+            "Calculation": {
+                "Message": "Invalid method",
+                "Success": False,
+            }
+        }), 400
+
+
+@ app.route('/calc/web/mean', methods=['GET', 'POST'])
+def calculate_average():
+    ans = decimal_or_integer(
+        statistics.mean(map(Decimal, request.args.getlist('numbers'))))
+
+    equation = '(' + ' + '.join(request.args.getlist(
+        'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = ' + str(ans)
+
+    if request.method == 'GET':
+        response = equation
+        return make_response(response, 200)
+
+    elif request.method == 'POST':
+        numbers = request.json['Numbers']
         ans = decimal_or_integer(
-            math.prod(map(Decimal, request.args.getlist('numbers'))))
-        equation = ' x ' .join(request.args.getlist(
-            'numbers')) + ' = ' + str(ans)
+            statistics.mean(map(Decimal, numbers)))
+        convstr = [str(i) for i in numbers]
+        equation = '(' + ' + '.join(convstr) + ') / ' + \
+            str(len(convstr)) + ' = ' + str(ans)
         return make_response(equation, 200)
-    except ValueError:
-        return make_response("Invalid input", 400)
 
-
-@ app.route('/calc/web/mean', methods=['GET'])
-def calculate_mean():
-    try:
-        ans = decimal_or_integer(statistics.mean(
-            map(Decimal, request.args.getlist('numbers'))))
-        equation = '(' + ' + '.join(request.args.getlist(
-            'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = ' + str(ans)
-        return make_response(equation, 200)
-    except ValueError:
-        return make_response("Invalid input", 400)
+    else:
+        return jsonify({
+            "Calculation": {
+                "Message": "Invalid method",
+                "Success": False,
+            }
+        }), 400
