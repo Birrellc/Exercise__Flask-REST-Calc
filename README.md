@@ -1,20 +1,55 @@
 # Rest Calc Exercise
 
 ---
-
 ## Notes
 
 Testing was Done with [POSTMAN](https://www.postman.com/)
 
 Doing this exercise again in the future after getting abit more Flask & Python experience again I would look to a maybe a class based approach and using flask-restful package instead of the approach taken this time as I feel it is abit convoluted and contain way too many **if** statements.
 
-## Resources
+---
 
-- [Flask Docs](https://flask.palletsprojects.com/en/2.1.x/)
-- [Python Docs](https://docs.python.org/3/)
-- [Decimal](https://docs.python.org/3/library/decimal.html)
-- [HTTP Methods](https://www.w3schools.com/tags/ref_httpmethods.asp)
-- [GET with JSON](https://stackoverflow.com/questions/978061/http-get-with-request-body)
+## Endpoints
+
+### app.py
+
+- ```calc/web/add/x/to/y```
+- ```calc/web/subtract/x/from/y```
+- ```calc/web/multiply/x/by/y```
+- ```calc/web/divide/x/by/y```
+
+- ```calc/api/add/x/to/y```
+- ```calc/api/subtract/x/from/y```
+- ```calc/api/multiply/x/by/y```
+- ```calc/api/divide/x/by/y```
+
+- ```calc/web/sum?numbers=10&numbers=5&numbers=3```
+- ```calc/web/product?numbers=10&numbers=5&numbers=3```
+- ```calc/web/mean?numbers=10&numbers=5&numbers=3```
+
+- ```calc/api/sum?numbers=10&numbers=5&numbers=3```
+- ```calc/api/product?numbers=10&numbers=5&numbers=3```
+- ```calc/api/mean?numbers=10&numbers=5&numbers=3```
+
+### app_v2.py
+
+- ```calc/web/add/x/y```
+- ```calc/web/subtract/x/y```
+- ```calc/web/multiply/x/y```
+- ```calc/web/divide/x/y```
+
+- ```calc/api/add/x/y```
+- ```calc/api/subtract/x/y```
+- ```calc/api/multiply/x/y```
+- ```calc/api/divide/x/y```
+
+- ```calc/web/sum?numbers=10&numbers=5&numbers=3```
+- ```calc/web/product?numbers=10&numbers=5&numbers=3```
+- ```calc/web/mean?numbers=10&numbers=5&numbers=3```
+
+- ```calc/api/sum?numbers=10&numbers=5&numbers=3```
+- ```calc/api/product?numbers=10&numbers=5&numbers=3```
+- ```calc/api/mean?numbers=10&numbers=5&numbers=3```
 
 ---
 
@@ -120,3 +155,15 @@ for example:
 #### Q1 - Optional)
 
 I managed to add a way to switch between api and web in my code.
+
+---
+
+## Resources
+
+- [Flask Docs](https://flask.palletsprojects.com/en/2.1.x/)
+- [Python Docs](https://docs.python.org/3/)
+- [Decimal](https://docs.python.org/3/library/decimal.html)
+- [HTTP Methods](https://www.w3schools.com/tags/ref_httpmethods.asp)
+- [GET with JSON](https://stackoverflow.com/questions/978061/http-get-with-request-body)
+
+---
