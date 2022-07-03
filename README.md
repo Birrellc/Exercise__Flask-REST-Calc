@@ -4,13 +4,15 @@
 
 ## Notes
 
+Testing was Done with [POSTMAN](https://www.postman.com/)
+
 ## Resources
 
-[Flask Docs](https://flask.palletsprojects.com/en/2.1.x/)
-[Python Docs](https://docs.python.org/3/)
-[Decimal](https://docs.python.org/3/library/decimal.html)
-[HTTP Methods](https://www.w3schools.com/tags/ref_httpmethods.asp)
-[GET with JSON](https://stackoverflow.com/questions/978061/http-get-with-request-body)
+- [Flask Docs](https://flask.palletsprojects.com/en/2.1.x/)
+- [Python Docs](https://docs.python.org/3/)
+- [Decimal](https://docs.python.org/3/library/decimal.html)
+- [HTTP Methods](https://www.w3schools.com/tags/ref_httpmethods.asp)
+- [GET with JSON](https://stackoverflow.com/questions/978061/http-get-with-request-body)
 
 ---
 
