@@ -6,6 +6,8 @@
 
 Testing was Done with [POSTMAN](https://www.postman.com/)
 
+Doing this exercise again in the future after getting abit more Flask & Python experience again I would look to a maybe a class based approach and using flask-restful package instead of the approach taken this time as I feel it is abit convoluted and contain way too many **if** statements.
+
 ## Resources
 
 - [Flask Docs](https://flask.palletsprojects.com/en/2.1.x/)
@@ -102,6 +104,8 @@ Problems fixed with the methods provided above and in my code.
 ---
 
 ### Part 4 – Return a JSON response
+
+I managed to setup a JSON response to return in api mode for this application the only issue I had was the failed calculation response which I didnt really fully understand the grounds for failure and how to approach this as stated before I haven't used python and flask for over a year and also i've not really done an app like this before. Instead I added a caluclation failed response for if a property that isnt a number is provided to the calculation.
 
 #### Q1 - a) Web and API modes - How could this be implemented without needing to create any additional endpoints or functions within the Flask app?
 
