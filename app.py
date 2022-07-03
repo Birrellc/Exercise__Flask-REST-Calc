@@ -27,8 +27,8 @@ def error_handler(message, error_code):
         }
     }), error_code
 
-
 # success handler function
+
 
 def success_hander(equation, ans, success_code):
     return jsonify({
@@ -42,7 +42,7 @@ def success_hander(equation, ans, success_code):
 # returns the sum of path parameters x and y
 
 
-@ app.route('/calc/<request_type>/add/<x>/to/<y>', methods=['GET'])
+@app.route('/calc/<request_type>/add/<x>/to/<y>', methods=['GET', 'POST'])
 def add(x, y, request_type):
     ans = decimal_or_integer(Decimal(x) + Decimal(y))
     equation = f'{str(x)} + {str(y)} = {str(ans)}'
@@ -51,12 +51,12 @@ def add(x, y, request_type):
         return make_response(equation, 200)
 
     if request.method == 'GET' and request_type == 'api':
-        return success_hander(ans, equation, 200)
+        return success_hander(equation, ans, 200)
 
 # returns the difference of path parameters x and y
 
 
-@ app.route('/calc/<request_type>/subtract/<x>/from/<y>', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/subtract/<x>/from/<y>', methods=['GET', 'POST'])
 def subtract(x, y, request_type):
     ans = decimal_or_integer(Decimal(y) - Decimal(x))
     equation = f'{(y)} - {(x)} = {(ans)}'
@@ -71,7 +71,7 @@ def subtract(x, y, request_type):
 # returns the product of path parameters x and y
 
 
-@ app.route('/calc/<request_type>/multiply/<x>/by/<y>', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/multiply/<x>/by/<y>', methods=['GET', 'POST'])
 def multiply(x, y, request_type):
     ans = decimal_or_integer(Decimal(x) * Decimal(y))
     equation = f'{str(x)} * {str(y)} = {str(ans)}'
@@ -83,7 +83,7 @@ def multiply(x, y, request_type):
         return success_hander(equation, ans, 200)
 
 
-@ app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/divide/<x>/by/<y>', methods=['GET', 'POST'])
 def divide(x, y, request_type):
     try:
         ans = decimal_or_integer(Decimal(x) / Decimal(y))
@@ -97,27 +97,35 @@ def divide(x, y, request_type):
 
     except ZeroDivisionError:
         # return Cannot divide by zero error
-        return make_response("Cannot divide by zero", 400)
+        return error_handler('Cannot divide by 0', 400)
 
 
-@ app.route('/calc/<request_type>/sum', methods=['GET'])
-def calculate_sum(request_type):
-    content_type = request.headers.get('Content-Type')
-    if not content_type == 'application/json':
+@app.route('/calc/request_type/sum', methods=['GET', 'POST'])
+def calculate_sum(request_type,):
+    ans = decimal_or_integer(
+        sum(map(Decimal, request.args.getlist('numbers'))))
+    equation = '+'.join(request.args.getlist('numbers')
+                        ) + ' = ' + str(ans)
 
-        ans = decimal_or_integer(
-            sum(map(Decimal, request.args.getlist('numbers'))))
-        equation = ' + ' .join(request.args.getlist('numbers')
-                               ) + ' = ' + str(ans)
+    if request.method == 'GET' and request_type == 'web':
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
 
-        if request.method == 'GET' and request_type == 'web':
+            if len(numbers) == 0:
+                return error_handler('Empty List', 400)
+
+            convstr = [str(i) for i in numbers]
+            ans = decimal_or_integer(sum(map(Decimal, numbers)))
+            equation = ' + '.join(convstr) + ' = '
+            return success_hander(equation, ans, 200)
+        else:
             response = equation
             return make_response(response, 200)
 
-        if request.method == 'GET' and request_type == 'api':
-            return success_hander(ans, equation, 200)
+    if request.method == 'GET' and request_type == 'api':
+        return success_hander(equation, ans, 200)
 
-    elif content_type == 'application/json':
+    elif request.method == 'POST' and request_type == 'api':
         if not request.is_json:
             return error_handler('Missing JSON in request', 400)
 
@@ -128,34 +136,41 @@ def calculate_sum(request_type):
         if len(numbers) == 0:
             return error_handler('Empty List', 400)
 
-        print(numbers)
         convstr = [str(i) for i in numbers]
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
         equation = ' + '.join(convstr) + ' = '
 
         return success_hander(equation, ans, 200)
-
     else:
         return error_handler('Invalid Method', 400)
 
 
-@ app.route('/calc/<request_type>/product', methods=['GET'])
+@app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
 def calculate_product(request_type):
-    content_type = request.headers.get('Content-Type')
-    if not content_type == 'application/json':
-        ans = decimal_or_integer(
-            math.prod(map(Decimal, request.args.getlist('numbers'))))
-        equation = ' x ' .join(request.args.getlist(
-            'numbers')) + ' = '
+    ans = decimal_or_integer(
+        math.prod(map(Decimal, request.args.getlist('numbers'))))
+    equation = ' x ' .join(request.args.getlist(
+        'numbers')) + ' = '
 
-        if request.method == 'GET' and request_type == 'web':
+    if request.method == 'GET' and request_type == 'web':
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
+            if len(numbers) == 0:
+                return error_handler('Empty List', 400)
+
+            print(numbers)
+            ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
+            convstr = [str(i) for i in numbers]
+            equation = ' x '.join(convstr) + ' = '
+
+        else:
             response = equation
             return make_response(response, 200)
 
-        if request.method == 'GET' and request_type == 'api':
-            success_hander(equation, ans, 200)
+    if request.method == 'GET' and request_type == 'api':
+        return success_hander(equation, ans, 200)
 
-    elif content_type == 'application/json':
+    elif request.method == 'POST' and request_type == 'api':
         if not request.is_json:
             return error_handler('Missing JSON in request', 400)
 
@@ -172,28 +187,38 @@ def calculate_product(request_type):
         equation = ' x '.join(convstr) + ' = '
 
         return success_hander(equation, ans, 200)
+
     else:
         return error_handler('Invalid Method', 400)
 
 
-@ app.route('/calc/<request_type>/mean', methods=['GET'])
+@app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
 def calculate_average(request_type):
-    content_type = request.headers.get('Content-Type')
-    if not content_type == 'application/json':
-        ans = decimal_or_integer(
-            statistics.mean(map(Decimal, request.args.getlist('numbers'))))
+    ans = decimal_or_integer(
+        statistics.mean(map(Decimal, request.args.getlist('numbers'))))
 
-        equation = '(' + ' + ' .join(request.args.getlist(
-            'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = '
+    equation = '(' + ' + ' .join(request.args.getlist(
+        'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = '
 
-        if request.method == 'GET' and request_type == 'web':
+    if request.method == 'GET' and request_type == 'web':
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
+            if len(numbers) == 0:
+                return error_handler('Empty List', 400)
+
+            ans = decimal_or_integer(
+                statistics.mean(map(Decimal, numbers)))
+            convstr = [str(i) for i in numbers]
+            equation = '(' + ' + '.join(convstr) + ') / ' + \
+                str(len(convstr)) + ' = '
+        else:
             response = equation
             return make_response(response, 200)
 
-        if request.method == 'GET' and request_type == 'api':
-            return success_hander(equation, ans, 200)
+    if request.method == 'GET' and request_type == 'api':
+        return success_hander(equation, ans, 200)
 
-    elif content_type == 'application/json':
+    elif request.method == 'POST' and request_type == 'api':
         if not request.is_json:
             return error_handler('Missing JSON in request', 400)
 
