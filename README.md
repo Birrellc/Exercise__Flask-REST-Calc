@@ -105,7 +105,7 @@ Problems fixed with the methods provided above and in my code.
 
 ### Part 4 – Return a JSON response
 
-I managed to setup a JSON response to return in api mode for this application the only issue I had was the failed calculation response which I didnt really fully understand the grounds for failure and how to approach this as stated before I haven't used python and flask for over a year and also i've not really done an app like this before. Instead I added a caluclation failed response for if a property that isnt a number is provided to the calculation.
+I managed to setup a JSON response to return in api mode for this application the only issue I had was the failed calculation response with False and null responses. I wasn't sure how to go about how to determine if the calculation had failed.
 
 #### Q1 - a) Web and API modes - How could this be implemented without needing to create any additional endpoints or functions within the Flask app?
 
