@@ -46,7 +46,7 @@ def success_hander(equation, ans, success_code):
 def add(x, y, request_type):
     # performs the required calculation with the provided operation
     ans = decimal_or_integer(Decimal(x) + Decimal(y))
-    equation = f'{str(x)} + {str(y)} = {str(ans)}'
+    equation = f'{x} + {y} = {Decimal(ans)}'
 
     # returns the calculation result in a string format
     if request.method == 'GET' and request_type == 'web':
@@ -63,7 +63,7 @@ def add(x, y, request_type):
 def subtract(x, y, request_type):
     # performs the required calculation with the provided operation
     ans = decimal_or_integer(Decimal(y) - Decimal(x))
-    equation = f'{(y)} - {(x)} = {(ans)}'
+    equation = f'{y} - {x} = {Decimal(ans)}'
 
     # returns the calculation result in a string format
     if request.method == 'GET' and request_type == 'web':
@@ -81,7 +81,7 @@ def subtract(x, y, request_type):
 def multiply(x, y, request_type):
     # performs the required calculation with the provided operation
     ans = decimal_or_integer(Decimal(x) * Decimal(y))
-    equation = f'{str(x)} * {str(y)} = {str(ans)}'
+    equation = f'{x} * {y} = {Decimal(ans)}'
 
     # returns the calculation result in a string format
     if request.method == 'GET' and request_type == 'web':
@@ -99,7 +99,7 @@ def divide(x, y, request_type):
     try:
         # performs the required calculation with the provided operation
         ans = decimal_or_integer(Decimal(x) / Decimal(y))
-        equation = f'{str(x)} / {str(y)} = {str(ans)}'
+        equation = f'{x} / {y} = {Decimal(ans)}'
 
         # returns the calculation result in a string format
         if request.method == 'GET' and request_type == 'web':
@@ -148,8 +148,8 @@ def calculate_sum(request_type,):
 
         # for all i in array convert to string (so we can use the .join method for the equation below)
         convstr = [str(i) for i in numbers]
-        equation = ' + '.join(convstr) + ' = '
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
+        equation = ' + '.join(convstr) + ' = '
 
         return success_hander(equation, ans, 200)
     else:

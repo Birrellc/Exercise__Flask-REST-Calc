@@ -60,9 +60,9 @@ def add(request_type, operation, x=None, y=None):
         # performs the required calculation with the provided operation
         ans = decimal_or_integer(ops[operation](Decimal(y), Decimal(x)))
         if operation == "subtract":
-            equation = f' {str(y)} - {str(x)} = {str(ans)}'
+            equation = f' {y} - {x} = {Decimal(ans)}'
         else:
-            equation = f'{operation} {str(x)} and {str(y)} = {str(ans)}'
+            equation = f'{operation} {x} and {y} = {Decimal(ans)}'
         # returns the calculation result in a string format
         if request.method == 'GET' and request_type == 'web':
             response = equation
