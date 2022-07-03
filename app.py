@@ -100,7 +100,7 @@ def divide(x, y, request_type):
         return error_handler('Cannot divide by 0', 400)
 
 
-@app.route('/calc/request_type/sum', methods=['GET', 'POST'])
+@app.route('/calc/<request_type>/sum', methods=['GET', 'POST'])
 def calculate_sum(request_type,):
     ans = decimal_or_integer(
         sum(map(Decimal, request.args.getlist('numbers'))))
@@ -113,13 +113,16 @@ def calculate_sum(request_type,):
 
             if len(numbers) == 0:
                 return error_handler('Empty List', 400)
-
+            print(numbers)
             convstr = [str(i) for i in numbers]
             ans = decimal_or_integer(sum(map(Decimal, numbers)))
             equation = ' + '.join(convstr) + ' = '
             return success_hander(equation, ans, 200)
+
         else:
+
             response = equation
+            print(response)
             return make_response(response, 200)
 
     if request.method == 'GET' and request_type == 'api':
@@ -162,6 +165,7 @@ def calculate_product(request_type):
             ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
             convstr = [str(i) for i in numbers]
             equation = ' x '.join(convstr) + ' = '
+            return success_hander(equation, ans, 200)
 
         else:
             response = equation
@@ -211,6 +215,7 @@ def calculate_average(request_type):
             convstr = [str(i) for i in numbers]
             equation = '(' + ' + '.join(convstr) + ') / ' + \
                 str(len(convstr)) + ' = '
+            return success_hander(equation, ans, 200)
         else:
             response = equation
             return make_response(response, 200)
