@@ -117,8 +117,6 @@ Problems have been fixed in my code.
 
 If we submit JSON without the numbers property we will recieve an error as in order to do the calcuation we need the property specified as **Numbers**
 
-_I somehow managed to use JSON payload data using only a GET request when experimenting with POSTMAN earlier in the week but I used POST in the actual app as from my understanding POST should be used to send data in the body._
-
 #### Q1 - a) - How can we handle this?
 
 I fixed this by adding an **if statement** in the **POST REQUEST** section of my code which handles the **JSON Data**.
