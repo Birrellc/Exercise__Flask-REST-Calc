@@ -1,4 +1,3 @@
-# Import required modules
 from flask import Flask, request, make_response, jsonify
 import math
 import statistics
@@ -51,20 +50,24 @@ ops = {
     "divide": operator.truediv
 }
 
+# Route with add, subtract, multiply & divide endpoints combined into one.
+# depending on the operation provided in the url this route will perform the correct calculation on the x and y paramaters
 
-@app.route('/calc/<request_type>/<operation>/<x>/<y>', methods=['GET', 'POST'])
+
+@app.route('/calc/<request_type>/<operation>/<x>/<y>', methods=['GET'])
 def add(request_type, operation, x=None, y=None):
     try:
+        # performs the required calculation with the provided operation
         ans = decimal_or_integer(ops[operation](Decimal(y), Decimal(x)))
         if operation == "subtract":
             equation = f' {str(y)} - {str(x)} = {str(ans)}'
         else:
             equation = f'{operation} {str(x)} and {str(y)} = {str(ans)}'
-
+        # returns the calculation result in a string format
         if request.method == 'GET' and request_type == 'web':
             response = equation
             return make_response(response, 200)
-
+        # returns the calculation result in a JSON format
         if request.method == 'GET' and request_type == 'api':
             return success_hander(equation, ans, 200)
 
@@ -72,22 +75,26 @@ def add(request_type, operation, x=None, y=None):
         # return Cannot divide by zero error
         return error_handler('Cannot divide by Zero', 400)
 
+# route/endpoint to calculate the sum of multiple numbers (more than 2 mainly)
+
 
 @app.route('/calc/<request_type>/sum', methods=['GET', 'POST'])
 def calculate_sum(request_type,):
+    # retrieve the paramaters from the url and perform the required calculation
     ans = decimal_or_integer(
         sum(map(Decimal, request.args.getlist('numbers'))))
     equation = '+'.join(request.args.getlist('numbers')
                         ) + ' = ' + str(ans)
-
+    # returns the calculation result in a string format
     if request.method == 'GET' and request_type == 'web':
         response = equation
         print(response)
         return make_response(response, 200)
-
+    # returns the calculation result in a JSON format
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
+    # using POST to send the JSON payload to the endpoint
     elif request.method == 'POST' and request_type == 'api':
         if 'Numbers' in request.json:
             numbers = request.json['Numbers']
@@ -100,7 +107,7 @@ def calculate_sum(request_type,):
 
         if len(numbers) == 0:
             return error_handler('Empty List', 400)
-
+        # for all i in array convert to string (so we can use the .join method for the equation below)
         convstr = [str(i) for i in numbers]
         ans = decimal_or_integer(sum(map(Decimal, numbers)))
         equation = ' + '.join(convstr) + ' = '
@@ -112,11 +119,13 @@ def calculate_sum(request_type,):
 
 @app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
 def calculate_product(request_type):
+    # retrieve the paramaters from the url and perform the required calculation
     ans = decimal_or_integer(
         math.prod(map(Decimal, request.args.getlist('numbers'))))
     equation = ' x ' .join(request.args.getlist(
         'numbers')) + ' = '
 
+    # returns the calculation result in a string format
     if request.method == 'GET' and request_type == 'web':
         response = equation
         return make_response(response, 200)
@@ -124,6 +133,7 @@ def calculate_product(request_type):
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
+    # returns the calculation result in a JSON format
     elif request.method == 'POST' and request_type == 'api':
         if 'Numbers' in request.json:
             numbers = request.json['Numbers']
@@ -139,6 +149,7 @@ def calculate_product(request_type):
 
         print(numbers)
         ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
+        # for all i in array convert to string (so we can use the .join method for the equation below)
         convstr = [str(i) for i in numbers]
         equation = ' x '.join(convstr) + ' = '
 
@@ -162,6 +173,7 @@ def calculate_average(request_type):
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
+    # using POST to send the JSON payload to the endpoint
     elif request.method == 'POST' and request_type == 'api':
 
         if 'Numbers' in request.json:
@@ -178,6 +190,7 @@ def calculate_average(request_type):
 
         ans = decimal_or_integer(
             statistics.mean(map(Decimal, numbers)))
+        # for all i in array convert to string (so we can use the .join method for the equation below)
         convstr = [str(i) for i in numbers]
         equation = '(' + ' + '.join(convstr) + ') / ' + \
             str(len(convstr)) + ' = '
