@@ -191,14 +191,7 @@ def calculate_average(request_type):
             return make_response(response, 200)
 
         if request.method == 'GET' and request_type == 'api':
-            response = jsonify({
-                "Calculation": {
-                    "Message": "Successful result",
-                    "Success": True,
-                    "Text": equation,
-                    "Result": ans
-                }})
-            return make_response(response, 200)
+            return success_hander(equation, ans, 200)
 
     elif content_type == 'application/json':
         if not request.is_json:
