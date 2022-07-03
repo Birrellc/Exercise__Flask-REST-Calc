@@ -108,34 +108,22 @@ def calculate_sum(request_type,):
                         ) + ' = ' + str(ans)
 
     if request.method == 'GET' and request_type == 'web':
-        if 'Numbers' in request.json:
-            numbers = request.json['Numbers']
-
-            if len(numbers) == 0:
-                return error_handler('Empty List', 400)
-            print(numbers)
-            convstr = [str(i) for i in numbers]
-            ans = decimal_or_integer(sum(map(Decimal, numbers)))
-            equation = ' + '.join(convstr) + ' = '
-            return success_hander(equation, ans, 200)
-
-        else:
-
-            response = equation
-            print(response)
-            return make_response(response, 200)
+        response = equation
+        return make_response(response, 200)
 
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
     elif request.method == 'POST' and request_type == 'api':
-        if not request.is_json:
-            return error_handler('Missing JSON in request', 400)
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
 
-        if 'Numbers' not in request.json:
-            return error_handler('Missing Numbers in request', 400)
+        elif len(request.args.getlist('numbers')) > 0 and 'Numbers' not in request.json:
+            numbers = request.args.getlist('numbers')
 
-        numbers = request.json['Numbers']
+        else:
+            return error_handler('Incorrect JSON data found', 400)
+
         if len(numbers) == 0:
             return error_handler('Empty List', 400)
 
@@ -156,32 +144,22 @@ def calculate_product(request_type):
         'numbers')) + ' = '
 
     if request.method == 'GET' and request_type == 'web':
-        if 'Numbers' in request.json:
-            numbers = request.json['Numbers']
-            if len(numbers) == 0:
-                return error_handler('Empty List', 400)
-
-            print(numbers)
-            ans = decimal_or_integer(math.prod(map(Decimal, numbers)))
-            convstr = [str(i) for i in numbers]
-            equation = ' x '.join(convstr) + ' = '
-            return success_hander(equation, ans, 200)
-
-        else:
-            response = equation
-            return make_response(response, 200)
+        response = equation
+        return make_response(response, 200)
 
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
     elif request.method == 'POST' and request_type == 'api':
-        if not request.is_json:
-            return error_handler('Missing JSON in request', 400)
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
 
-        if 'Numbers' not in request.json:
-            return error_handler('Missing Numbers in request', 400)
+        elif len(request.args.getlist('numbers')) > 0 and 'Numbers' not in request.json:
+            numbers = request.args.getlist('numbers')
 
-        numbers = request.json['Numbers']
+        else:
+            return error_handler('Incorrect JSON data found', 400)
+
         if len(numbers) == 0:
             return error_handler('Empty List', 400)
 
@@ -191,7 +169,6 @@ def calculate_product(request_type):
         equation = ' x '.join(convstr) + ' = '
 
         return success_hander(equation, ans, 200)
-
     else:
         return error_handler('Invalid Method', 400)
 
@@ -205,32 +182,22 @@ def calculate_average(request_type):
         'numbers')) + ') / ' + str(len(request.args.getlist('numbers'))) + ' = '
 
     if request.method == 'GET' and request_type == 'web':
-        if 'Numbers' in request.json:
-            numbers = request.json['Numbers']
-            if len(numbers) == 0:
-                return error_handler('Empty List', 400)
-
-            ans = decimal_or_integer(
-                statistics.mean(map(Decimal, numbers)))
-            convstr = [str(i) for i in numbers]
-            equation = '(' + ' + '.join(convstr) + ') / ' + \
-                str(len(convstr)) + ' = '
-            return success_hander(equation, ans, 200)
-        else:
-            response = equation
-            return make_response(response, 200)
+        response = equation
+        return make_response(response, 200)
 
     if request.method == 'GET' and request_type == 'api':
         return success_hander(equation, ans, 200)
 
     elif request.method == 'POST' and request_type == 'api':
-        if not request.is_json:
-            return error_handler('Missing JSON in request', 400)
+        if 'Numbers' in request.json:
+            numbers = request.json['Numbers']
 
-        if 'Numbers' not in request.json:
-            return error_handler('Missing Numbers in request', 400)
+        elif len(request.args.getlist('numbers')) > 0 and 'Numbers' not in request.json:
+            numbers = request.args.getlist('numbers')
 
-        numbers = request.json['Numbers']
+        else:
+            return error_handler('Incorrect JSON data found', 400)
+
         if len(numbers) == 0:
             return error_handler('Empty List', 400)
 
