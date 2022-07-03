@@ -113,6 +113,8 @@ def divide(x, y, request_type):
         # return Cannot divide by zero error
         return error_handler('Cannot divide by 0', 400)
 
+# route/endpoint to calculate the sum of multiple numbers (more than 2 mainly)
+
 
 @app.route('/calc/<request_type>/sum', methods=['GET', 'POST'])
 def calculate_sum(request_type,):
@@ -154,6 +156,8 @@ def calculate_sum(request_type,):
         return success_hander(equation, ans, 200)
     else:
         return error_handler('Invalid Method', 400)
+
+# route/endpoint to calculate the product of multiple numbers (more than 2 mainly)
 
 
 @app.route('/calc/<request_type>/product', methods=['GET', 'POST'])
@@ -198,6 +202,8 @@ def calculate_product(request_type):
         return success_hander(equation, ans, 200)
     else:
         return error_handler('Invalid Method', 400)
+
+# route/endpoint to calculate the mean(average) of a set of numbers
 
 
 @app.route('/calc/<request_type>/mean', methods=['GET', 'POST'])
